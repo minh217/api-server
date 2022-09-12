@@ -3,7 +3,7 @@ import { PatchUserDto } from '../dto/patch.user.dto';
 import { PutUserDto } from '../dto/put.user.dto';
 import shortid from 'shortid';
 import debug from 'debug';
-import { db } from '../../common/connection';
+import { db } from '../../../common/connection';
 const log: debug.IDebugger = debug('app:in-memory-dao');
 
 class UsersDao {
@@ -15,7 +15,16 @@ class UsersDao {
 
     async addUser(user: CreateUserDto){
         user.id = shortid.generate();
-        this.users.push(user);
+        db.query(
+            'INSERT INTO users(id,email,password,"lastName", "firstName") VALUES($1,$2,$3,$4,$5)', 
+            [
+                user.id, 
+                user.email,
+                user.password,
+                user.lastName,
+                user.firstName
+            ]
+        )
         return user.id;
     }
 
