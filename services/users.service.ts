@@ -12,8 +12,8 @@ class UsersService implements CRUD {
         return UsersDao.getUsers();
     }
     
-    putById = async (id: string, resource: PutUserDto) => {
-        return UsersDao.putUserById(id, resource);
+    putById = async (resource: PutUserDto) => {
+        return UsersDao.putUserById(resource.id, resource);
     }
 
     readById = async (id: string) => {

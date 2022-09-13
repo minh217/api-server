@@ -1,5 +1,18 @@
 export const CommonMessages = {
-    createSuccessfully: "Create Successfully",
-    updateSuccessfully: "Update Successfully",
-    deleteSuccessfully: "Delete Successfully"
+    createSuccessfully: {
+        status: 201,
+        message: "Create Successfully."
+    },
+    updateSuccessfully: {
+        status: 200,
+        message: "Update Successfully."
+    },
+    deleteSuccessfully: {
+        status: 200,
+        message: "Delete Successfully."
+    },
+    serverError: {
+        status: 500,
+        message: "Internal Server Error."
+    }
 }
