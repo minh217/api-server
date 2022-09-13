@@ -6,7 +6,7 @@ class CategoriesController {
         res.status(200).send(categories);
     };
     getCategoryById = async (req: express.Request, res: express.Response) => {
-        const category = await CategoriesService.readById(req.body.id);
+        const category = await CategoriesService.readById(Number(req.params.categoryId));
         res.status(200).send(category);
     }
     createCategory = async (req: express.Request, res: express.Response) => {

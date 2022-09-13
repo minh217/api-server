@@ -31,6 +31,9 @@ class CategoriesService implements CRUD{
     getCategorySameCode = async(code: string, id: number) => {
         return await CategoriesDao.getCategorySameCode(code, id);
     }
+    checkCategoryHaseNews = async(id: number) => {
+        return await CategoriesDao.checkCategoryHaseNews(id);
+    } 
 }
 
 export default new CategoriesService();;

@@ -19,6 +19,7 @@ class CategoriesDao{
     async getCategoryById(id: number){
         let result = await db.query('SELECT * FROM categories WHERE id = $1', [id], queryResult.one)
         .catch(() => {return null})
+        console.log("TESST", result);
         return result;
     }
     async addCategory(category: CreateCategoryDto) {
@@ -68,24 +69,32 @@ class CategoriesDao{
             'name',
             'code'
         ]
+        let queryStr = "";
+        let stt = 2;
         Object.keys(resource).forEach((key) => {
-            console.log(key);
+            
             if(!allowedPatchFields.includes(key))
             {
                 delete resource[key as keyof PatchCategoryDto];
+            }else{
+                if(queryStr === "")
+                {
+                    queryStr += ` ${key} = $${stt} `
+                }else{
+                    queryStr += `, ${key} = $${stt} `
+                }
+                
             }
+            stt++;
         });
-        
         await db.query(
-            'UPDATE categories SET name = $1, code = $2 WHERE id = $3',
-            [...Object.values(resource), id],
+            `UPDATE categories SET ${queryStr} WHERE id = $1`,
+            [id, ...Object.values(resource)],
             queryResult.none
-        ).catch(() =>{
-            console.log("TESST11");
+        ).catch((error) =>{
             result = CommonMessages.serverError;
         });
         return result;       
-        return CommonMessages.updateSuccessfully;
     }
 
     async getCategoryByCode(code: string){
@@ -98,12 +107,28 @@ class CategoriesDao{
     }
 
     async getCategorySameCode(code: string, id: number){
-        let category = await db.query('SELECT * FROM categories WHERE code = $1 AND id <> $2', [code, id]);
+        let category = await db.query(
+            'SELECT * FROM categories WHERE code = $1 AND id <> $2', 
+            [code, id]
+            ).catch(() => {
+                return null;
+            });
         if(category.length <= 0){
             return null;
         }else{
             return category;
         }
+    }
+
+    async checkCategoryHaseNews(id: number){
+        let news = await db.query(
+            'SELECT 1 FROM news WHERE category_id = $1', 
+            [id], 
+            queryResult.any
+            ).catch(() => {
+                return null;
+            });
+        return news;
     }
 }
 
