@@ -1,6 +1,7 @@
 import { CRUD } from "../common/crud.inteface";
 import NewsDao from "../repositories/news/dao/news.dao";
 import { CreateNewDto } from "../repositories/news/dto/create.new.dto";
+import { PatchNewDto } from "../repositories/news/dto/patch.new.dto";
 import { PutNewDto } from "../repositories/news/dto/put.new.dto";
 class NewsService implements CRUD{
     list = async (limit: number, page: number) => {
@@ -15,8 +16,15 @@ class NewsService implements CRUD{
     readById = async (id: number) => {
         return await NewsDao.getNewById(id);
     };
-    deleteById = async (id: any) => Promise<any>;
-    patchById = async (id: any, resource: any) => Promise<any>;
+    deleteById = async (id: number) => {
+        return await NewsDao.deleteById(id);
+    };
+    patchById = async (id: number, resource: PatchNewDto) => {
+        return await NewsDao.patchNew(id, resource);
+    };
+    getNewsByCategoryId = async(id: number) => {
+        return await NewsDao.getNewsByCategoryId(id);
+    }
     
 }
 

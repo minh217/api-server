@@ -34,10 +34,23 @@ class NewsMiddleware {
         next: express.NextFunction
     ) => {
         let category = await CategoriesService.readById(req.body.category_id);
-        if(category){
+        if(category === null){
             res.status(404).send("Category Is Not Found");
         }else{
             next();
+        }
+    }
+
+    validPatchField = async (
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+    ) => {
+        if(req.body.title || req.body.content || req.body.images || req.body.category_id)
+        {
+            next();
+        }else{
+            res.status(400).send("Invalid Field");
         }
     }
 }

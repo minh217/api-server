@@ -15,7 +15,7 @@ class CategoriesService implements CRUD{
         return await CategoriesDao.updateCategory(resource);
     };
     readById = async (id: number) => {
-        return await CategoriesDao.getCategoryById(Number(id));
+        return await CategoriesDao.getCategoryById(id);
     };
     deleteById = async (id: number) => { 
         return await CategoriesDao.deleteCategory(id);

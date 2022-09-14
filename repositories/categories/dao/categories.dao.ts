@@ -19,7 +19,6 @@ class CategoriesDao{
     async getCategoryById(id: number){
         let result = await db.query('SELECT * FROM categories WHERE id = $1', [id], queryResult.one)
         .catch(() => {return null})
-        console.log("TESST", result);
         return result;
     }
     async addCategory(category: CreateCategoryDto) {

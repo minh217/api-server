@@ -18,28 +18,40 @@ export class NewsRoutes extends CommonRoutesConfig{
             body('category_id').custom((value) => {
                 if(Number(value) <= 0)
                 {
-                    return false
+                    return Promise.reject("category_id should greater than zero");
                 }
-            }).withMessage("category_id should greater than zero"),
+                return true;
+            }),
             body('title').isString().withMessage('title, content should be string'),
             body('content').isString().withMessage('code should be string'),
             body([
                     'title',
-                    'content'
-                ]).notEmpty().withMessage('title or content is empty'),
+                    'content',
+                    'created_by'
+                ]).notEmpty().withMessage('Title,Content,Created_By is empty'),
             NewsMiddleware.verifyBodyFieldsErros,
             NewsController.createNew
         ])
 
-        this.app.put(`/news:newId`, [
+        this.app.route(`/news/:newId`)
+        .get(NewsController.getById)
+        .delete(NewsMiddleware.newIsNotFound, NewsController.deleteNew);
+
+        this.app.get(`/news/by-category/:categoryId`, [
+            NewsMiddleware.categoryIsNotFound,
+            NewsController.getNewsByCategoryId
+        ])
+        
+        this.app.put(`/news/:newId`, [
             NewsMiddleware.newIsNotFound,
             NewsMiddleware.categoryIsNotFound,
             body('category_id').isNumeric().withMessage("category_id should be number"),
             body('category_id').custom((value) => {
                 if(Number(value) <= 0)
                 {
-                    return false
-                }
+                    return Promise.reject("category_id should greater than zero");
+                };
+                return true;
             }).withMessage("category_id should greater than zero"),
             body('title').isString().withMessage('title, content should be string'),
             body('content').isString().withMessage('code should be string'),
@@ -49,6 +61,11 @@ export class NewsRoutes extends CommonRoutesConfig{
                 ]).notEmpty().withMessage('title or content is empty'),
             NewsMiddleware.verifyBodyFieldsErros,
             NewsController.putNew
+        ])
+
+        this.app.patch(`/news/:newId`, [
+            NewsMiddleware.validPatchField,
+            NewsController.patchNew
         ])
         return this.app;
     }
