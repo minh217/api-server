@@ -6,6 +6,7 @@ import * as expressWinston from 'express-winston';
 import cors from 'cors';
 import { CommonRoutesConfig } from './common/common.routes.config';
 import { UsersRoutes } from './routes/users.routes.config';
+import { NewsRoutes } from './routes/new.routes.config';
 import debug from 'debug';
 import bodyParser from 'body-parser';
 import { CategoryRoutes } from './routes/category.routes.config';
@@ -44,6 +45,7 @@ app.use(expressWinston.logger(loggerOptions));
 
 routes.push(new UsersRoutes(app));
 routes.push(new CategoryRoutes(app));
+routes.push(new NewsRoutes(app));
 
 
 const runningMessage = `Server running at http://localhost:${port}`;
