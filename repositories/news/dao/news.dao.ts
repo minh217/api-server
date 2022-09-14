@@ -1,7 +1,8 @@
 import { queryResult } from "pg-promise";
 import { db } from "../../../common/connection";
 import { CommonMessages } from "../../../common/messages/common.messages";
-import { CreateNewDto } from "../dto/create.dto";
+import { CreateNewDto } from "../dto/create.new.dto";
+import { PutNewDto } from "../dto/put.new.dto";
 import { format } from 'date-fns'
 class NewsDao {
     getNews = async () => {
@@ -37,6 +38,33 @@ class NewsDao {
             });
         return result
     }
+
+    putNew = async(resource: PutNewDto) => {
+        let result = CommonMessages.updateSuccessfully;
+        await db.query(
+            `UPDATE news SET
+                title = $2,
+                content = $3,
+                category_id = $4
+            WHERE id = $1
+            `,
+            [
+                resource.id,
+                resource.title,
+                resource.content,
+                resource.category_id
+            ],
+            queryResult.none
+        ).catch(() => {
+            result = CommonMessages.serverError;
+        });
+        return result;
+    }
+
+    getNewById = async (id: number) => {
+        let result = db.query(`SELECT * FROM news WHERE id =${id}`).catch(() => {return null;});
+        return result;
+    } 
 }
 
 export default new NewsDao();

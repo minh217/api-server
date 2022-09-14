@@ -15,6 +15,13 @@ class NewsController {
         let result = await NewsService.create(req.body);
         res.status(result.status).send(result.message);
     }
+    putNew = async(
+        req: express.Request,
+        res: express.Response
+    ) => {
+        let result = await NewsService.putById({...req.body, id: req.params.newId});
+        res.status(result.status).send(result.message);
+    }
 }
 
 export default new NewsController();

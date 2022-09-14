@@ -30,6 +30,26 @@ export class NewsRoutes extends CommonRoutesConfig{
             NewsMiddleware.verifyBodyFieldsErros,
             NewsController.createNew
         ])
+
+        this.app.put(`/news:newId`, [
+            NewsMiddleware.newIsNotFound,
+            NewsMiddleware.categoryIsNotFound,
+            body('category_id').isNumeric().withMessage("category_id should be number"),
+            body('category_id').custom((value) => {
+                if(Number(value) <= 0)
+                {
+                    return false
+                }
+            }).withMessage("category_id should greater than zero"),
+            body('title').isString().withMessage('title, content should be string'),
+            body('content').isString().withMessage('code should be string'),
+            body([
+                    'title',
+                    'content'
+                ]).notEmpty().withMessage('title or content is empty'),
+            NewsMiddleware.verifyBodyFieldsErros,
+            NewsController.putNew
+        ])
         return this.app;
     }
 }
