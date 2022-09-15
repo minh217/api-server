@@ -33,7 +33,7 @@ class NewsMiddleware {
         res: express.Response,
         next: express.NextFunction
     ) => {
-        let category = await CategoriesService.readById(req.body.category_id);
+        let category = await CategoriesService.readById(Number(req.params.categoryId));
         if(category === null){
             res.status(404).send("Category Is Not Found");
         }else{

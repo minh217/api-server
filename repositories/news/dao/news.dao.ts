@@ -130,7 +130,7 @@ class NewsDao {
         
         return result;
     }
-    }
+
 }
 
 export default new NewsDao();

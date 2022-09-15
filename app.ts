@@ -12,7 +12,7 @@ import bodyParser from 'body-parser';
 import { CategoryRoutes } from './routes/category.routes.config';
 const app: express.Application = express();
 const server: http.Server = http.createServer(app);
-const port = 3000;
+const port = 5000;
 const routes: Array<CommonRoutesConfig> = [];
 const debugLog: debug.IDebugger = debug('app');
 

@@ -38,7 +38,6 @@ export class NewsRoutes extends CommonRoutesConfig{
         .delete(NewsMiddleware.newIsNotFound, NewsController.deleteNew);
 
         this.app.get(`/news/by-category/:categoryId`, [
-            NewsMiddleware.categoryIsNotFound,
             NewsController.getNewsByCategoryId
         ])
         
