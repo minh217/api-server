@@ -38,7 +38,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const category_routes_config_1 = require("./routes/category.routes.config");
 const app = (0, express_1.default)();
 const server = http.createServer(app);
-const port = 3000;
+const port = 5000;
 const routes = [];
 const debugLog = (0, debug_1.default)('app');
 // app.use(express.json());
