@@ -24,18 +24,19 @@ class NewsDao {
                 title,
                 content,
                 created,
-                created_by
+                created_by,
+                summary
                 ) 
                 VALUES(
                     ${Number(resource.category_id)},
                     '${resource.title}',
                     '${resource.content}',
                     '${format(new Date(), 'yyyy-MM-dd')}',
-                    '${resource.created_by}'
+                    '${resource.created_by}',
+                    '${resource.summary}'
                 );`,
                 queryResult.none
             ).catch((error) => {
-                console.log(error);
                 result = CommonMessages.serverError
             });
         return result
@@ -43,13 +44,13 @@ class NewsDao {
 
     putNew = async(resource: PutNewDto) => {
         let result = CommonMessages.updateSuccessfully;
-        console.log(resource);
         await db.query(
             `UPDATE news SET
                 title = $2,
                 content = $3,
                 category_id = $4,
-                updated = $5
+                updated = $5,
+                summary
             WHERE id = $1
             `,
             [
@@ -57,24 +58,26 @@ class NewsDao {
                 resource.title,
                 resource.content,
                 resource.category_id,
-                format(new Date(), 'yyyy-MM-dd')
+                format(new Date(), 'yyyy-MM-dd'),
+                resource.summary
             ],
             queryResult.none
         ).catch((error) => {
-            console.log(error);
             result = CommonMessages.serverError;
         });
         return result;
     }
 
     getNewById = async (id: number) => {
-        let result = db.query(`SELECT * FROM news WHERE id =${id}`).catch(() => {return null;});
+        let result = db.oneOrNone(`SELECT * FROM news WHERE id =${id}`)
+        .catch(() => {return null;});
         return result;
     } 
 
     patchNew = async (id: number, resource: PatchNewDto) => {
         let result = CommonMessages.updateSuccessfully;
         const allowedPatchFields = [
+            'summary',
             'title',
             'content',
             'images',
@@ -124,7 +127,6 @@ class NewsDao {
             [id],
             queryResult.none
         ).catch((error) => {
-            console.log(error);
             result = CommonMessages.serverError
         });
         

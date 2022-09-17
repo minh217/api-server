@@ -14,5 +14,9 @@ export const CommonMessages = {
     serverError: {
         status: 500,
         message: "Internal Server Error."
+    },
+    notFound: {
+        status: 400,
+        message: "NotFound"
     }
 }

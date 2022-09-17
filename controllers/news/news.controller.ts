@@ -16,7 +16,8 @@ class NewsController {
             title: req.body.title,
             content: req.body.content,
             category_id: Number(req.body.category_id),
-            created_by: req.body.created_by
+            created_by: req.body.created_by,
+            summary: req.body.summary
         });
         res.status(result.status).send(result.message);
     }
@@ -28,7 +29,8 @@ class NewsController {
             title: req.body.title,
             content: req.body.content,
             category_id: req.body.category_id,
-            id: Number(req.params.newId)
+            id: Number(req.params.newId),
+            summary: req.body.summary
         });
         res.status(result.status).send(result.message);
     }
@@ -37,8 +39,12 @@ class NewsController {
         res: express.Response
     ) => {
         let result = await NewsService.readById(Number(req.params.newId));
-        res.status(200).send(result);
-
+        if(result == null){
+            res.status(400).send(result);
+        }else{
+            res.status(200).send(result);
+        }
+        
     }
     patchNew = async (
         req: express.Request,

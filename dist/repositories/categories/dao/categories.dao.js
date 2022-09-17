@@ -46,7 +46,6 @@ class CategoriesDao {
         return __awaiter(this, void 0, void 0, function* () {
             let result = common_messages_1.CommonMessages.updateSuccessfully;
             yield connection_1.db.query('UPDATE categories SET name = $1, code = $2 WHERE id = $3', [category.name, category.code, category.id], pg_promise_1.queryResult.none).catch(() => {
-                console.log("TESST11");
                 result = common_messages_1.CommonMessages.serverError;
             });
             return result;
