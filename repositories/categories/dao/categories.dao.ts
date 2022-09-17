@@ -42,7 +42,6 @@ class CategoriesDao{
             [category.name, category.code,category.id],
             queryResult.none
         ).catch(() =>{
-            console.log("TESST11");
             result = CommonMessages.serverError;
         });
         return result;
@@ -55,7 +54,6 @@ class CategoriesDao{
             [id],
             queryResult.none
         ).catch((error) => {
-            console.log(error);
             result = CommonMessages.serverError
         });
         
