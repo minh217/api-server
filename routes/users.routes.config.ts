@@ -25,8 +25,6 @@ export class UsersRoutes extends CommonRoutesConfig{
             .delete(UsersController.removeUser);
 
         this.app.put(`/users/:userId`, [
-            UsersMiddleware.validateRequiredUserBodyFields,
-            UsersMiddleware.validateSameEmailBelongToSameUser,
             UsersController.put,
         ]);
 

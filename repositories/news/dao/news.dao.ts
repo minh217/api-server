@@ -17,7 +17,6 @@ class NewsDao {
     }
     createNew = async (resource: CreateNewDto) => {
         let result = CommonMessages.createSuccessfully;
-
         await db.query(
             `INSERT INTO news(
                 category_id,
@@ -28,13 +27,21 @@ class NewsDao {
                 summary
                 ) 
                 VALUES(
-                    ${Number(resource.category_id)},
-                    '${resource.title}',
-                    '${resource.content}',
-                    '${format(new Date(), 'yyyy-MM-dd')}',
-                    '${resource.created_by}',
-                    '${resource.summary}'
+                    $1,
+                    $2,
+                    $3,
+                    $4,
+                    $5,
+                    $6
                 );`,
+                [
+                    Number(resource.category_id),
+                    resource.title,
+                    resource.content,
+                    format(new Date(), 'yyyy-MM-dd'),
+                    resource.created_by,
+                    resource.summary
+                ],
                 queryResult.none
             ).catch((error) => {
                 result = CommonMessages.serverError
@@ -113,7 +120,7 @@ class NewsDao {
 
     getNewsByCategoryId = async(categoryId: number) => {
         let result = await db.query(
-            `SELECT * FROM news WHERE category_id = ${categoryId}`
+            `SELECT * FROM news WHERE category_id = $1`, [categoryId]
             , queryResult.many)
             .catch(() => {
                 return [];

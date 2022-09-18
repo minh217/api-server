@@ -4,6 +4,7 @@ import { PutUserDto } from '../dto/put.user.dto';
 import shortid from 'shortid';
 import debug from 'debug';
 import { db } from '../../../common/connection';
+import { CommonMessages } from '../../../common/messages/common.messages';
 const log: debug.IDebugger = debug('app:in-memory-dao');
 
 class UsersDao {
@@ -33,16 +34,20 @@ class UsersDao {
     }
 
     async getUserById(userId: string){
-        return this.users.find((user: {id: string}) => user.id === userId);
+        return await db.query(`Select * From users where id = '${userId}'`);
     }
 
     async putUserById(userId: string, user: PutUserDto){
-        const objIndex =this.users.findIndex(
-            (obj: {id: string}) => obj.id === userId
-        );
-
-        this.users.splice(objIndex, 1, user);
-        return `${user.id} update vid put`;
+        let result = CommonMessages.updateSuccessfully
+        await db.query('UPDATE users SET "firstName" = $2, "lastName" = $3, "permissionLevel" = $4 WHERE id = $1',
+        [
+            userId,
+            user.firstName,
+            user.lastName,
+            user.permissionLevel
+        ]
+        ).catch((error) => { console.log(error); result = CommonMessages.serverError ;});
+        return result;
     }
 
     async patchUserById(userId: string, user: PatchUserDto){
@@ -52,7 +57,7 @@ class UsersDao {
 
         let currentUser: CreateUserDto = this.users[objIndex];
         const allowedPatchFields = [
-            'password',
+            'email',
             'firstName',
             'lastName',
             'permissionLevel',
@@ -60,7 +65,7 @@ class UsersDao {
 
         for(let field of allowedPatchFields){
             if(field in user){
-                currentUser = {...currentUser, [field]: user[field as keyof CreateUserDto]}
+                currentUser = {...currentUser, [field]: user[field as keyof PutUserDto]}
             }
         }
 
